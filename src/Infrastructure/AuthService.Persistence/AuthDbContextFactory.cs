@@ -7,9 +7,9 @@ namespace AuthService.Persistence
     {
         public AuthDbContext CreateDbContext(string[] args)
         {
-            var sentinelDbConnectionString = "host=localhost;port=5433;database=TestDb;username=test-user;password=test-user;";
+            var authDbConnectionString = "host=localhost;port=5433;database=TestDb;username=test-user;password=test-user;";
             var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>()
-                 .UseNpgsql(sentinelDbConnectionString);
+                 .UseNpgsql(authDbConnectionString);
 
             return new AuthDbContext(optionsBuilder.Options);
         }

@@ -1,38 +1,34 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
-using KickAssBackend.Models.ResponseObject;
-using KickAssBackend.Models;
 using System.Threading.Tasks;
-using System.Text.Json;
-using System.Collections.Generic;
+using MediatR;
+using AuthService.Application.Features.Users.Queries.GenerateLoginUri;
+using AuthService.Application.Features.Users.Queries.ExchangeCodeToToken;
+using AuthService.Application.Features.Users.Queries.GetUserFromGitHub;
+using AuthService.Application.Features.Users.Queries.GetUserEmailsFromGitHub;
+using AuthService.Application.Features.Users.Commands.CreateAndGetLoggedInUser;
+using AuthService.Application.Features.Users.Commands.CreateJwtToken;
 
-namespace KickAssBackend.Controllers
+namespace AuthService.API.Controllers
 {
     [Route("api/[controller]")]
     public class GitHubController : ControllerBase
     {
-        private readonly GitHubApiService api;
-        public GitHubController(GitHubApiService api)
-        {
-            api = api;
-        }
+        private readonly IMediator _mediator;
+        public GitHubController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("loginurl")]
-        public Task<IActionResult> GetLoginUrl()
-        {
-            string message = "https://github.com/login/oauth/authorize?client_id=&redirect_uri=http://localhost:13000/callback&scope=user&state=123";
-            return responseObject;
-        }
+        public async Task<IActionResult> GetLoginUrl()
+            => Ok(await _mediator.Send(new GenerateLoginUriQuery()));
 
-        [HttpGet("exchangecode")]
-        async public Task<string> ExchangeCodeToToken(string token)
+        [HttpPost("login")]
+        async public Task<IActionResult> RegisterAndGetToken([FromBody] ExchangeCodeToTokenQueryRequest request)
         {
-            string clientId = "";
-            string clientSecret = "";
-            string redirectUrl = "http://kickasspayouts.n00bs.io:3500/auth/redirectdiscord";
-            string response = await _client.FetchAccesToken(token, clientId, clientSecret, redirectUrl);
-            Console.WriteLine(response);
-            return response;
+            var gitHubObj = await _mediator.Send(new ExchangeCodeToTokenQuery(request.Code));
+            var gitHubUserEmail = await _mediator.Send(new GetUserEmailsFromGitHubQuery(gitHubObj.AccessToken));
+            var githubUser = await _mediator.Send(new GetUserFromGitHubQuery(gitHubObj.AccessToken));
+            var loggedInUser = await _mediator.Send(new CreateAndGetLoggedInUserCommand(githubUser, gitHubUserEmail));
+            var jwtToken = await _mediator.Send(new CreateJwtTokenCommand(loggedInUser));
+            return Ok(jwtToken);
         }
     }
 }
