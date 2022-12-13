@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authservice-configmap
+data:
+  host: "http://authservice-service:12000"
+  environment: "Development"
+  ghclientid: "7168ed85158cbcf6f0ac"
+  redirecturi: "http://cscloud6-197.lnu.se/callback"
+  jwtissuer: "AuthService"
+  jwtaudience: "LitterService"
+  jwtdurationinminutes: "60"
+  runmigrations: "true"

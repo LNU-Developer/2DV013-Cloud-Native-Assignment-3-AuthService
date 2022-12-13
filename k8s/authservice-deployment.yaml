@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice-deployment
+  labels:
+    app: authservice
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: authservice
+  template:
+    metadata:
+      labels:
+        app: authservice
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - auth-db
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: authservice
+          image: gitlab.lnu.se:5050/2dv013/student/team-5-burmese/2dv013-cloud-native-assignment-3-authservice/authservice:latest # CHANGE
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 12000
+          env:
+            - name: AUTHDB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-db-config # CHANGE!
+                  key: AUTHDB_HOST # CHANGE!
+            - name: AUTHDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-db-config # CHANGE!
+                  key: POSTGRES_DB # CHANGE!
+            - name: AUTHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets # CHANGE!
+                  key: POSTGRES_USER # CHANGE!
+            - name: AUTHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets # CHANGE!
+                  key: POSTGRES_PASSWORD # CHANGE!
+            - name: GHCLIENTID
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: ghclientid
+            - name: REDIRECTURI
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: redirecturi
+            - name: JWTISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: jwtissuer
+            - name: JWTAUDIENCE
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: jwtaudience
+            - name: JWTDURATIONINMINUTES
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: jwtdurationinminutes
+            - name: GHCLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: authservice-secret
+                  key: ghclientsecret
+            - name: JWTPRIVATEKEY
+              valueFrom:
+                secretKeyRef:
+                  name: authservice-secret
+                  key: jwtprivatekey
+            - name: RUN_MIGRATIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: runmigrations
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: authservice-configmap
+                  key: environment
+      imagePullSecrets:
+        - name: regcred # Secret set as a secret in the cluster
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice-service
+  labels:
+    app: authservice
+spec:
+  selector:
+    app: authservice
+  ports:
+    - protocol: TCP
+      port: 12000
+      targetPort: 12000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-svc-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: authservice-service
+                port:
+                  number: 12000
