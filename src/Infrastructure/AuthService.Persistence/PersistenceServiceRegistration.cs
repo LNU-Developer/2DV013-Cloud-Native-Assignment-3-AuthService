@@ -44,7 +44,7 @@ namespace AuthService.Persistence
                     ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
                 })
                 .PersistKeysToDbContext<AuthDbContext>();
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>().AddEntityFrameworkStores<AuthDbContext>().AddDefaultTokenProviders();
             services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }

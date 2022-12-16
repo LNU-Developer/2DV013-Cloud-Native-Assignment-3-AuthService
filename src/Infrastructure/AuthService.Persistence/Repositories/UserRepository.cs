@@ -22,14 +22,14 @@ namespace AuthService.Persistence.Repositories
         public async Task<List<GetAllUserDto>> GetAllUsers()
         {
             return await _userManager.Users
-                .Select(user => new GetAllUserDto(new Guid(user.Id), user.Email, user.UserName, user.GitHubProfileUrl))
+                .Select(user => new GetAllUserDto(user.Id, user.Email, user.UserName, user.GitHubProfileUrl))
                 .ToListAsync();
         }
         public async Task<GetByIdUserDto> GetUserById(Guid id)
         {
             return await _userManager.Users
-                .Where(x => x.Id == id.ToString())
-                .Select(user => new GetByIdUserDto(new Guid(user.Id), user.Email, user.UserName, user.GitHubProfileUrl))
+                .Where(x => x.Id == id)
+                .Select(user => new GetByIdUserDto(user.Id, user.Email, user.UserName, user.GitHubProfileUrl))
                 .FirstOrDefaultAsync();
         }
 
