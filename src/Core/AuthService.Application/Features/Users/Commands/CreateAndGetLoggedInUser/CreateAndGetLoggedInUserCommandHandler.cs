@@ -1,33 +1,35 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AuthService.Application.Contracts.Persistence;
+using AuthService.Application.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace AuthService.Application.Features.Users.Commands.CreateAndGetLoggedInUser
 {
 
-    public class CreateAndGetLoggedInUserCommandHandler : IRequestHandler<CreateAndGetLoggedInUserCommand, IdentityUser>
+    public class CreateAndGetLoggedInUserCommandHandler : IRequestHandler<CreateAndGetLoggedInUserCommand, ApplicationUser>
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        public CreateAndGetLoggedInUserCommandHandler(UserManager<IdentityUser> userManager)
+        private readonly IUserRepository _userRepository;
+        public CreateAndGetLoggedInUserCommandHandler(IUserRepository userRepository)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
         }
-        public async Task<IdentityUser> Handle(CreateAndGetLoggedInUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> Handle(CreateAndGetLoggedInUserCommand request, CancellationToken cancellationToken)
         {
             var email = request.GitHubEmails.FirstOrDefault(x => x.Primary == true) ?? request.GitHubEmails.FirstOrDefault();
-            var existingUser = await _userManager.FindByEmailAsync(email.Email);
+            var existingUser = await _userRepository.GetUserByEmail(email.Email);
             if (existingUser is not null) return existingUser;
 
-            var newUser = new IdentityUser
+            var newUser = new ApplicationUser
             {
                 Email = email.Email,
                 UserName = request.GitHubUser.Login,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                GitHubProfileUrl = request.GitHubUser.AvatarUrl
             };
 
-            await _userManager.CreateAsync(newUser);
+            await _userRepository.CreateUser(newUser);
             return newUser;
         }
     }

@@ -1,4 +1,7 @@
 using System;
+using AuthService.Application.Contracts.Persistence;
+using AuthService.Application.Models;
+using AuthService.Persistence.Repositories;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
@@ -41,7 +44,8 @@ namespace AuthService.Persistence
                     ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
                 })
                 .PersistKeysToDbContext<AuthDbContext>();
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>().AddDefaultTokenProviders();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

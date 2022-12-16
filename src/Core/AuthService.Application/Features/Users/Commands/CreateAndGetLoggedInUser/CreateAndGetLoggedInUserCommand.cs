@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AuthService.Application.Features.Users.Commands.CreateAndGetLoggedInUser
 {
-    public sealed record CreateAndGetLoggedInUserCommand : IRequest<IdentityUser>
+    public sealed record CreateAndGetLoggedInUserCommand : IRequest<ApplicationUser>
     {
         public CreateAndGetLoggedInUserCommand(GitHubUser gitHubUser, List<GitHubEmail> gitHubEmails)
         {

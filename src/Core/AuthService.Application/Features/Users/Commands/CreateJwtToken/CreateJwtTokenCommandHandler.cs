@@ -16,9 +16,9 @@ namespace AuthService.Application.Features.Users.Commands.CreateJwtToken
 
     public class CreateJwtTokenCommandHandler : IRequestHandler<CreateJwtTokenCommand, CreateJwtTokenCommandResponse>
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtSettings _jwtSettings;
-        public CreateJwtTokenCommandHandler(UserManager<IdentityUser> userManager, JwtSettings jwtSettings)
+        public CreateJwtTokenCommandHandler(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings;
@@ -32,7 +32,7 @@ namespace AuthService.Application.Features.Users.Commands.CreateJwtToken
             };
         }
 
-        private async Task<JwtSecurityToken> GenerateToken(IdentityUser user)
+        private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
