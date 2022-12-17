@@ -37,8 +37,8 @@ spec:
             - name: AUTHDB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: auth-db-config # CHANGE!
-                  key: AUTHDB_HOST # CHANGE!
+                  name: auth-db-config # CHANGE!!
+                  key: AUTHDB_HOST # CHANGE!!
             - name: AUTHDB_DATABASE
               valueFrom:
                 configMapKeyRef:
