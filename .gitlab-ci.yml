@@ -36,7 +36,7 @@ deploy:
     # Authorize the cluster to pull images from our registry. (synced against Deploy Token "gitlab-deploy-token")
     - kubectl delete secret regcred || true
     - kubectl create secret docker-registry regcred --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
-
+    - kubectl apply delete ./k8s/authservice-secret.yaml -f ./k8s/authservice-configmap.yaml -f ./k8s/authservice-deployment.yaml
     - kubectl apply -f ./k8s/authservice-secret.yaml -f ./k8s/authservice-configmap.yaml -f ./k8s/authservice-deployment.yaml
 
     # Debugging outputs after completion
