@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using AuthService.Infrastructure;
 using AuthService.Application;
 using AuthService.Persistence;
+using AuthService.API.Middlewares;
 
 namespace AuthService.API
 {
@@ -36,7 +37,7 @@ namespace AuthService.API
 
             services.AddCors(options =>
             {
-                options.AddPolicy("LitterCors", builder =>
+                options.AddPolicy("AuthCors", builder =>
                 {
                     builder
                         .AllowAnyOrigin()
@@ -60,11 +61,12 @@ namespace AuthService.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Litter v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth v1"));
             }
             // app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors("LitterCors");
+            app.UseCustomExceptionHandler();
+            app.UseCors("AuthCors");
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseEndpoints(endpoints =>

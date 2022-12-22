@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using AuthService.Application.Models;
 using System;
+using AuthService.Application.Behaviors;
 
 namespace AuthService.Application
 {
@@ -33,6 +34,7 @@ namespace AuthService.Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return services;
         }
