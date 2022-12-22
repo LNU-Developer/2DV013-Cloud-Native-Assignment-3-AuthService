@@ -37,8 +37,8 @@ spec:
             - name: AUTHDB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: auth-db-config # CHANGE!
-                  key: AUTHDB_HOST # CHANGE!
+                  name: auth-db-config # CHANGE!!
+                  key: AUTHDB_HOST # CHANGE!!
             - name: AUTHDB_DATABASE
               valueFrom:
                 configMapKeyRef:
@@ -121,13 +121,14 @@ kind: Ingress
 metadata:
   name: auth-svc-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
     - http:
         paths:
-          - path: /api
+          - path: /auth/api(/|$)(.*)
             pathType: Prefix
             backend:
               service:
