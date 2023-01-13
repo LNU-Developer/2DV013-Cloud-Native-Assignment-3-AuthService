@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Persistence", "src\Infrastructure\AuthService.Persistence\AuthService.Persistence.csproj", "{CD89790C-E34E-4561-8FB1-EBF6A464BFBE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9A6E0EDC-D514-47E0-9CC9-E345C2F709F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Application.UnitTests", "tests\AuthService.Application.UnitTests\AuthService.Application.UnitTests.csproj", "{F56C2C0F-F49B-4473-BEB7-7AC48E0ADEA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +54,10 @@ Global
 		{CD89790C-E34E-4561-8FB1-EBF6A464BFBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD89790C-E34E-4561-8FB1-EBF6A464BFBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD89790C-E34E-4561-8FB1-EBF6A464BFBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56C2C0F-F49B-4473-BEB7-7AC48E0ADEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56C2C0F-F49B-4473-BEB7-7AC48E0ADEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56C2C0F-F49B-4473-BEB7-7AC48E0ADEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56C2C0F-F49B-4473-BEB7-7AC48E0ADEA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F2444F68-1996-43B7-B161-12600FF52241} = {F83A42FF-F21E-489D-A29A-0685170FA975}
@@ -60,5 +68,6 @@ Global
 		{46AD1DC5-B2C6-4785-825B-D5B2E8E1E72D} = {F83A42FF-F21E-489D-A29A-0685170FA975}
 		{FABEA63F-5701-46E1-989E-BDFDB0F0B490} = {46AD1DC5-B2C6-4785-825B-D5B2E8E1E72D}
 		{CD89790C-E34E-4561-8FB1-EBF6A464BFBE} = {46AD1DC5-B2C6-4785-825B-D5B2E8E1E72D}
+		{F56C2C0F-F49B-4473-BEB7-7AC48E0ADEA8} = {9A6E0EDC-D514-47E0-9CC9-E345C2F709F4}
 	EndGlobalSection
 EndGlobal
