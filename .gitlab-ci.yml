@@ -17,8 +17,9 @@ build:
 test:
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:latest
+
   script:
-    - "dotnet build --no-restore"
+    - "dotnet restore"
     - "dotnet test --no-restore"
 
 deploy:
